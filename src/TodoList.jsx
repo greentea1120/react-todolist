@@ -20,47 +20,47 @@ class Todolist extends Component {
           <input className="input" id="input"
           value={this.state.inputValue}
           onChange={(e) => {this.handleInputChange(e)}} />
-          <button onClick={this.handleBtnClick.bind(this)}>提交</button>
+          <button onClick={() => {this.handleBtnClick()}}>提交</button>
         </div>
         <ul>
-          { /* dangerouslySetInnerHTML可以解析HTML */ }
-          {
-            this.state.list.map((item, index) => {
-              return (
-                <div>
-                  <TodoItem></TodoItem>
-                  {/* <li 
-                    key={index} 
-                    onClick={this.handleItemDelete.bind(this, index)}
-                    dangerouslySetInnerHTML={{__html: item}}>
-                  </li> */}
-                </div>
-              )
-            })
-          }
+          {this.getTodoItem()}
         </ul>
       </Fragment>
     )
   }
 
-  handleInputChange(e) {
-    this.setState({
-      inputValue: e.target.value
+  getTodoItem() {
+    return this.state.list.map((item, index) => {
+      return (
+        <TodoItem
+          key={index}
+          content={item} 
+          index={index}
+          deleteItem={this.handleItemDelete.bind(this)}>
+        </TodoItem>
+      )
     })
+  }
+
+  handleInputChange(e) {
+    const inputValue = e.target.value
+    this.setState(() => ({
+      inputValue
+    }))
   }
 
   handleBtnClick() {
-    this.setState({
-      list: [...this.state.list, this.state.inputValue],
+    this.setState((prevState) => ({
+      list: [...prevState.list, prevState.inputValue],
       inputValue: ''
-    })
+    }))
   }
 
   handleItemDelete(index) {
-    const list = [...this.state.list]
-    list.splice(index, 1)
-    this.setState({
-      list
+    this.setState((prevState) => {
+      const list = [...prevState]
+      list.splice(index, 1)
+      return { list }
     })
   }
 }
