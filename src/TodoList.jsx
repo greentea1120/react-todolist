@@ -19,10 +19,12 @@ class Todolist extends Component {
           <label htmlFor="input">输入内容</label>
           <input className="input" id="input"
           value={this.state.inputValue}
-          onChange={(e) => {this.handleInputChange(e)}} />
+          onChange={(e) => {this.handleInputChange(e)}} 
+          onKeyUp={(e) => {this.handleEnterChange(e)}} 
+          ref={(input) => {this.input = input}}/>
           <button onClick={() => {this.handleBtnClick()}}>提交</button>
         </div>
-        <ul>
+        <ul ref={(ul) => {this.ul = ul}}>
           {this.getTodoItem()}
         </ul>
       </Fragment>
@@ -42,18 +44,26 @@ class Todolist extends Component {
     })
   }
 
+  handleEnterChange(e) {
+    if (e.keyCode === 13) {
+      this.handleBtnClick(e)
+    }
+  }
+
   handleInputChange(e) {
-    const inputValue = e.target.value
+    const inputValue = this.input.value
     this.setState(() => ({
       inputValue
     }))
   }
 
-  handleBtnClick() {
+  handleBtnClick(e) {
     this.setState((prevState) => ({
       list: [...prevState.list, prevState.inputValue],
       inputValue: ''
-    }))
+    }), () => {
+      console.log(this.ul.querySelectorAll('div').length)
+    })
   }
 
   handleItemDelete(index) {
