@@ -7,7 +7,8 @@ class Todolist extends Component {
     super(props)
     this.state = {
       inputValue: '',
-      list: ['learn vue', 'learn react']
+      list: ['learn vue', 'learn react'],
+      show: true
     }
   }
 
@@ -27,8 +28,17 @@ class Todolist extends Component {
         <ul ref={(ul) => {this.ul = ul}}>
           {this.getTodoItem()}
         </ul>
+        <br />
+        <div className={this.state.show ? 'show' : 'hide'}>hello</div>
+        <button onClick={() => {this.handleToggle()}}>toggle</button>
       </Fragment>
     )
+  }
+
+  handleToggle() {
+    this.setState({
+      show: this.state.show ? false : true
+    })
   }
 
   getTodoItem() {

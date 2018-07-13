@@ -74,3 +74,5 @@ const value = e.target.value
 // 可以写成
 const value = this.input.value
 ```
+### 生命周期
+> 生命周期函数在某一个时刻组件会自动调用执行的函数

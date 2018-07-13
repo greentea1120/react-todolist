@@ -7,6 +7,7 @@ class TodoItem extends Component {
   }
 
   render() {
+    console.log('render')
     const { content, test } = this.props
     return (
       <div onClick={this.handleChick}>
@@ -18,6 +19,18 @@ class TodoItem extends Component {
   handleChick() {
     const { deleteItem, index } = this.props
     deleteItem(index)
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.content !== this.props.content) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  componentWillUpdate() {
+    console.log('componentWillUpdate')
   }
 }
 
