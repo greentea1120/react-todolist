@@ -1,88 +1,65 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import TodoItem from './TodoItem.jsx'
-import './style.css'
+import { Input, Button } from 'antd'
+import 'antd/dist/antd.css'
 
-class Todolist extends Component {
+class TodoList extends Component {
   constructor(props) {
     super(props)
     this.state = {
       inputValue: '',
-      list: ['learn vue', 'learn react'],
-      show: true
+      list: []
     }
   }
 
   render() {
     return (
-      <Fragment>
-        {/* 注释是这样写的 */}
-        <div>
-          <label htmlFor="input">输入内容</label>
-          <input className="input" id="input"
-          value={this.state.inputValue}
-          onChange={(e) => {this.handleInputChange(e)}} 
-          onKeyUp={(e) => {this.handleEnterChange(e)}} 
-          ref={(input) => {this.input = input}}/>
-          <button onClick={() => {this.handleBtnClick()}}>提交</button>
-        </div>
-        <ul ref={(ul) => {this.ul = ul}}>
-          {this.getTodoItem()}
-        </ul>
-        <br />
-        <div className={this.state.show ? 'show' : 'hide'}>hello</div>
-        <button onClick={() => {this.handleToggle()}}>toggle</button>
-      </Fragment>
+      <div style={{padding: '20px'}}>
+        <Input style={{width: '300px'}}
+        onChange={(e) => {this.changInputValue(e)}}
+        onKeyUp={(e) => {this.keyUpAddList(e)}}
+        value={this.state.inputValue}/>
+        <Button onClick={() => {this.addList()}}>submit</Button>
+        <TodoItem list={this.state.list} deleteItem={(index) => {this.clickDeleteItem(index)}}/>
+      </div>
     )
   }
 
-  handleToggle() {
-    this.setState({
-      show: this.state.show ? false : true
+  changInputValue(e) {
+    const inputValue = e.target.value
+    this.setState(() => {
+      return {
+        inputValue
+      }
+    }, () => {
+      // console.log(this.state.inputValue)
     })
   }
 
-  getTodoItem() {
-    return this.state.list.map((item, index) => {
-      return (
-        <TodoItem
-          key={index}
-          content={item} 
-          index={index}
-          deleteItem={this.handleItemDelete.bind(this)}>
-        </TodoItem>
-      )
-    })
-  }
-
-  handleEnterChange(e) {
+  keyUpAddList(e) {
     if (e.keyCode === 13) {
-      this.handleBtnClick(e)
+      this.addList()
     }
   }
 
-  handleInputChange(e) {
-    const inputValue = this.input.value
-    this.setState(() => ({
-      inputValue
-    }))
-  }
-
-  handleBtnClick(e) {
-    this.setState((prevState) => ({
-      list: [...prevState.list, prevState.inputValue],
-      inputValue: ''
-    }), () => {
-      console.log(this.ul.querySelectorAll('div').length)
+  addList() {
+    this.setState((prevState) => {
+      return {
+        list: [...prevState.list, prevState.inputValue],
+        inputValue: ''
+      }
+    }, () => {
+      console.log(this.state.list)
     })
   }
 
-  handleItemDelete(index) {
-    this.setState((prevState) => {
-      const list = [...prevState.list]
-      list.splice(index, 1)
-      return { list }
+  clickDeleteItem(index) {
+    const list = [...this.state.list]
+    list.splice(index, 1)
+    this.setState({
+      list
     })
   }
 }
 
-export default Todolist
+export default TodoList
