@@ -1,64 +1,51 @@
 import React, { Component } from 'react'
-import TodoItem from './TodoItem.jsx'
-import { Input, Button } from 'antd'
+import store from './store'
+import { Input, Button, List } from 'antd'
 import 'antd/dist/antd.css'
+// import {CHANGE_INPUT_VALUE, ADD_LIST, DELETE_ITEM} from './store/actionTypes'
+import {getInputChangeAction, getAddItemAction, getDeleteItemAction} from './store/actionCreators'
 
 class TodoList extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      inputValue: '',
-      list: []
-    }
+    this.state = store.getState()
+    store.subscribe(() => {this.handStoreChange()})
   }
 
   render() {
     return (
       <div style={{padding: '20px'}}>
         <Input style={{width: '300px'}}
-        onChange={(e) => {this.changInputValue(e)}}
-        onKeyUp={(e) => {this.keyUpAddList(e)}}
-        value={this.state.inputValue}/>
-        <Button onClick={() => {this.addList()}}>submit</Button>
-        <TodoItem list={this.state.list} deleteItem={(index) => {this.clickDeleteItem(index)}}/>
+        value={this.state.inputValue}
+        onChange={(e) => {this.handleInputChange(e)}}/>
+        <Button onClick={() => {this.handleSubmit()}}>submit</Button>
+        <List
+          bordered
+          dataSource={this.state.list}
+          renderItem={(item, index) => (<List.Item onClick={() => {this.deleteItem(index)}}>{item}</List.Item>)}
+          style={{width: '300px', marginTop: '20px'}}
+        />
       </div>
     )
   }
 
-  changInputValue(e) {
-    const inputValue = e.target.value
-    this.setState(() => {
-      return {
-        inputValue
-      }
-    }, () => {
-      // console.log(this.state.inputValue)
-    })
+  handleInputChange(e) {
+    const action = getInputChangeAction(e.target.value)
+    store.dispatch(action)
   }
 
-  keyUpAddList(e) {
-    if (e.keyCode === 13) {
-      this.addList()
-    }
+  handleSubmit() {
+    const action = getAddItemAction()
+    store.dispatch(action)
   }
 
-  addList() {
-    this.setState((prevState) => {
-      return {
-        list: [...prevState.list, prevState.inputValue],
-        inputValue: ''
-      }
-    }, () => {
-      console.log(this.state.list)
-    })
+  handStoreChange() {
+    this.setState(store.getState())
   }
 
-  clickDeleteItem(index) {
-    const list = [...this.state.list]
-    list.splice(index, 1)
-    this.setState({
-      list
-    })
+  deleteItem(index) {
+    const action = getDeleteItemAction(index)
+    store.dispatch(action)
   }
 }
 
