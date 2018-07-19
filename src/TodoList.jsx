@@ -5,7 +5,7 @@ import store from './store'
 import 'antd/dist/antd.css'
 // import {CHANGE_INPUT_VALUE, ADD_LIST, DELETE_ITEM} from './store/actionTypes'
 import TodoListUI from './TodoListUI.jsx'
-import {getInputChangeAction, getAddItemAction, getDeleteItemAction, getTodoListAction} from './store/actionCreators'
+import {getInputChangeAction, getAddItemAction, getDeleteItemAction, getInitListSagaAction} from './store/actionCreators'
 
 class TodoList extends Component {
   constructor(props) {
@@ -15,9 +15,22 @@ class TodoList extends Component {
   }
 
   componentDidMount() {
-    const action = getTodoListAction()
-    console.log(action)
+    // redux-thunk
+
+    // const action = getTodoListAction()
+    // console.log(action)
+    // store.dispatch(action)
+
+    // axios.get('/api/list')
+    //   .then(res => {
+    //     const data = res.data
+    //     const action = getInitListAction(data)
+    //     store.dispatch(action)
+    //     console.log(data)
+    //   })
+    const action = getInitListSagaAction()
     store.dispatch(action)
+    console.log(action)
   }
 
   render() {
