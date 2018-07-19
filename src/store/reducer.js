@@ -1,7 +1,7 @@
 import {CHANGE_INPUT_VALUE, ADD_LIST, DELETE_ITEM, INIT_LIST} from './actionTypes'
 
 const defaultState = {
-  inputValue: '123',
+  inputValue: '999',
   list: [1,2]
 }
 
